@@ -78,7 +78,7 @@ function distanceBetweenCoordinatesInMiles2(lat1,lon1,lat2,lon2) {//these are do
 				// var coords = new google.maps.LatLng(latitude, longitude); 
 				// var location= new google.maps.LatLng(latitude, longitude);
 				//alert(location);
-xhr.open('GET', 'http://allow-any-origin.appspot.com/http://maps.googleapis.com/maps/api/place/search/json?types='+getParameterByName('type')+'&rankby=distance&location='+getParameterByName('latt')+','+getParameterByName('longi')+'&hasNextPage=true&nextPage()=true&key='+getParameterByName('key'));
+xhr.open('GET', 'https://allow-any-origin.appspot.com/https://maps.googleapis.com/maps/api/place/search/json?types='+getParameterByName('type')+'&rankby=distance&location='+getParameterByName('latt')+','+getParameterByName('longi')+'&hasNextPage=true&nextPage()=true&key='+getParameterByName('key'));
 xhr.onload = function(e) {
   var data = JSON.parse(this.response);
   var results = data.results;

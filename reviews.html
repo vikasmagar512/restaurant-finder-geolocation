@@ -44,7 +44,7 @@
 		
 //alert('hi in images...');
 //alert('from reviews'+obj);
-xhr.open('GET', 'http://allow-any-origin.appspot.com/https://maps.googleapis.com/maps/api/place/details/json?placeid='+obj+'&key=AIzaSyDX2ApQ9IxDuUhYP1moZNBDHCXqBAx5zQI');			
+xhr.open('GET', 'https://allow-any-origin.appspot.com/https://maps.googleapis.com/maps/api/place/details/json?placeid='+obj+'&key=AIzaSyDX2ApQ9IxDuUhYP1moZNBDHCXqBAx5zQI');			
   /*xhr.open('GET', 'http://allow-any-origin.appspot.com/https://maps.googleapis.com/maps/api/place/details/json?placeid=ChIJoaM9Ek_AwjsRIOymQ4Ig9Mk&key=AIzaSyDX2ApQ9IxDuUhYP1moZNBDHCXqBAx5zQI');*/
 			xhr.onload = function(e) {
 				var data = JSON.parse(this.response);

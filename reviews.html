@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="">
+		<meta name="author" content="">
+		<title>Bootstrap Photo Gallery Demo</title>
+		<link href="bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+		<script src="jquery.min.js"></script>
+		<script src="bootstrap/dist/js/bootstrap.min.js"></script>
+		<style type="text/css"></style>
+		<style>
+			span.stars, span.stars span {
+				display: block;
+				background: url(stars.png) 0 -16px repeat-x;
+				width: 80px;
+				height: 16px;
+			}
+			span.stars span {
+				background-position: 0 0;
+			}
+		</style>
+		<script>  
+			function addRow(text) {
+					var div = document.createElement('div');
+					div.className = 'row well';
+					div.innerHTML = text;
+					 document.body.appendChild(div);
+			}
+			function getMeta(url){
+				 $("<img/>").attr("src", url).load(function(){
+					 s = {w:this.width, h:this.height};
+					 //alert(s.w+' '+s.h);      
+				 });
+				$("<img/>").attr("src", url).error(function(){
+					 s = {w:this.width, h:this.height};
+					// alert(s.w+' '+s.h);      
+				  });  
+			}
+			var xhr = new XMLHttpRequest();
+			var obj=getParameterByName('place_id');
+		
+//alert('hi in images...');
+//alert('from reviews'+obj);
+xhr.open('GET', 'http://allow-any-origin.appspot.com/https://maps.googleapis.com/maps/api/place/details/json?placeid='+obj+'&key=AIzaSyDX2ApQ9IxDuUhYP1moZNBDHCXqBAx5zQI');			
+  /*xhr.open('GET', 'http://allow-any-origin.appspot.com/https://maps.googleapis.com/maps/api/place/details/json?placeid=ChIJoaM9Ek_AwjsRIOymQ4Ig9Mk&key=AIzaSyDX2ApQ9IxDuUhYP1moZNBDHCXqBAx5zQI');*/
+			xhr.onload = function(e) {
+				var data = JSON.parse(this.response);
+				var result = data.result;
+				var htmlcontent="";// = '<center><div class="col-sm-8 col-md-8 col-xs-8 well" style="background-color:#eff4ff"><strong>'+result.name+'</strong>';
+				if(result.photos!=null)	
+					htmlcontent+='<img style="float:right;height:100px;width:100px;" src="https://maps.googleapis.com/maps/api/place/photo?maxwidth='+result.photos[0].width+'&photoreference='+result.photos[0].photo_reference+'&key=AIzaSyDX2ApQ9IxDuUhYP1moZNBDHCXqBAx5zQI" style="width: 100px; height: 100px;" class="img-rounded" />';//getMeta('https://maps.googleapis.com/maps/api/place/photo?maxwidth='+result.photos[0].width+'&photoreference='+result.photos[0].photo_reference+'&key=AIzaSyDX2ApQ9IxDuUhYP1moZNBDHCXqBAx5zQI');}
+				else
+					htmlcontent+='<img style="float:right;" src="'+result.icon+'" style="width: 100px; height: 100px;" class="img-rounded" />';
+				/*if(result.rating!=null)
+					htmlcontent+='<div class="outer-outer" style="width:80px;height:24px"><div class="outer col-sm-6" style="background: url(stars.png) 0 -16px repeat-x;height:16px;padding:0px;"><div id="inner" style="float:left;background: url(stars.png);width:'+parseFloat(result.rating)*16.0+'px;height:16px"></div></div><div class="col-sm-6"><strong>'+result.rating+'/5</strong></div></div></div>';
+				htmlcontent+='</div></center>';
+				addRow(htmlcontent);*/
+				var overall_rating=0;
+				if(result.rating!=null){
+					$('#gallery').append('<div class="well" id="mainreview" style="background-color:#eff4ff">'+htmlcontent+'<h1>'+result.name+'</h1></br><h3>Overall Rating</h3><div class="outer-outer" style="width:80px;height:24px"><div +class="outer col-sm-6" style="background: url(stars.png) 0 -16px repeat-x;height:16px;padding:0px;"><div id="inner" style="float:left;background: url(stars.png);width:'+parseFloat(result.rating)*16.0+'px;height:16px"></div></div><div class="col-sm-6"><strong>'+result.rating+'/5</strong></div></div></li></div>');
+				}else{
+					$('#gallery').append('<div class="well" id="mainreview" style="background-color:#eff4ff">'+htmlcontent+'<h1>'+result.name+'</h1></br><h3>Not Rated Yet....</h3></div></li></div>');
+				}
+				if(result.reviews!=null){
+					for(var i=0;i<result.reviews.length;i++){
+					
+						if(i%2)$('#gallery').append('<div class="well"><strong>'+result.reviews[i].author_name+'</strong></br>'+result.reviews[i].text+'<div class="outer-outer" style="width:80px;height:24px"><div class="outer col-sm-6" style="background: url(stars.png) 0 -16px repeat-x;height:16px;padding:0px;"><div id="inner" style="float:left;background: url(stars.png);width:'+parseFloat(result.reviews[i].rating)*16.0+'px;height:16px"></div></div><div class="col-sm-6"><strong>'+result.reviews[i].rating+'/5</strong></div></div></li></div>');
+						else $('#gallery').append('<div class="well" style="background-color:white;"><strong>'+result.reviews[i].author_name+'</strong></br>'+result.reviews[i].text+'<div class="outer-outer" style="width:80px;height:24px"><div class="outer col-sm-6" style="background: url(stars.png) 0 -16px repeat-x;height:16px;padding:0px;"><div id="inner" style="float:left;background: url(stars.png);width:'+parseFloat(result.reviews[i].rating)*16.0+'px;height:16px"></div></div><div class="col-sm-6"><strong>'+result.reviews[i].rating+'/5</strong></div></div></li></div>');
+					}
+				}
+				/*if(result.url!=null){
+					htmlcontent+='<a href='+result.url+'">write a review...</a><br>';
+				$('#mainreview').append('<br><a href='+result.url+'">write a review...</a><br>');
+				
+				}*/
+				
+			}
+			xhr.send();
+			function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+   
+			//while there are entries in json
+		</script>
+		<div>    
+			<div class="row" style="text-align:center; border-bottom:1px #ccc; margin-bottom:20px;">   </div>
+			<ul id="gallery" class="row">
+			
+			</ul>             
+		</div> <!-- /container -->
+    </head>
+</html>

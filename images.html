@@ -1,0 +1,208 @@
+<html lang="en"><head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Bootstrap Photo Gallery Demo</title>
+    <link href="bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="jquery.min.js"></script><style type="text/css"></style>
+    <script src="bootstrap/dist/js/bootstrap.min.js"></script>
+    
+  <style>
+      .container ul {         
+          padding:0 0 0 0;
+          margin:0 0 0 0;
+      }
+      .container ul li {     
+          list-style:none;
+          margin-bottom:25px;           
+      }
+      .container ul li img {
+          cursor: pointer;
+      }
+      .container .modal-body {
+          padding:5px !important;
+      }
+      .container .modal-content {
+          border-radius:0;
+      }
+      .container .modal-dialog img {
+          text-align:center;
+          margin:0 auto;
+      }
+    .controls{          
+        width:50px;
+        display:block;
+        font-size:11px;
+        padding-top:8px;
+        font-weight:bold;          
+    }
+    .next {
+        float:right;
+        text-align:right;
+    }
+	.prev {
+        float:left;
+        text-align:right;
+    }
+      /*override modal for demo only*/
+      .container .modal-dialog {
+          max-width:500px;
+          padding-top: 90px;
+      }
+      @media screen and (min-width: 768px){
+          .modal-dialog {
+              width:500px;
+              padding-top: 90px;
+          }          
+      }
+      @media screen and (max-width:1500px){
+          #ads {
+              display:none;
+          }
+      }
+  </style></head>
+  
+  <body class="">
+    
+	<!--<div id="ads" style="padding:25px; 
+                border-left:1px solid #ccc; 
+                border-bottom:1px solid #ccc; 
+                width:200px; 
+                height:200px; 
+                margin:0 0 0 0; 
+                position:absolute; 
+                background:#fff; 
+                right:0; 
+                top:0; 
+                -webkit-box-sizing:content-box !important;
+                box-sizing:content-box !important;
+                ">        
+        <script async="" src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        <ins class="adsbygoogle" style="display:inline-block;width:200px;height:200px" data-ad-client="ca-pub-6163174599932698" data-ad-slot="6189522971"></ins>
+        <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>-->
+    <div class="container">    
+        <div class="row" style="text-align:center; border-bottom:1px #ccc; margin-bottom:20px;">   
+        </div>
+        
+        <ul id="gallery" class="row">
+           <!-- <li class="col-lg-2 col-md-2 col-sm-3 col-xs-4">
+                <img class="img-responsive" src="http://demo.fearlessflyer.com/html/demo/bootstrap-photo-gallery/images/photodune-174908-rocking-the-night-away-xs.jpg">
+            </li>
+            -->
+          </ul>             
+    </div> <!-- /container -->
+    
+     
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+      <div class="modal-dialog">
+        <div class="modal-content">  
+          <div class="modal-body"></div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    <script>
+	
+  </script>
+  <script>
+        $(document).ready(function(){        
+		var data;
+	var result;
+	xhr = new XMLHttpRequest();
+var obj=getParameterByName('place_id');
+
+//alert('from images'+obj);
+xhr.open('GET', 'http://allow-any-origin.appspot.com/https://maps.googleapis.com/maps/api/place/details/json?placeid='+obj+'&key=AIzaSyDX2ApQ9IxDuUhYP1moZNBDHCXqBAx5zQI');
+xhr.onload = function(e) {
+	data = JSON.parse(this.response);
+    result = data.result;
+	if(result.photos!=null){
+		for(var i=0;i<result.photos.length;i++){
+			$('#gallery').append('<li class="col-lg-2 col-md-2 col-sm-3 col-xs-4"><img class="img-responsive" src="https://maps.googleapis.com/maps/api/place/photo?maxwidth='+result.photos[i].width+'&photoreference='+result.photos[i].photo_reference+'&key=AIzaSyDX2ApQ9IxDuUhYP1moZNBDHCXqBAx5zQI'+'"></li>');
+		}
+	}else{
+		$('#gallery').append('<p>Images not available...</p>');
+	}
+	$('li img').on('click',function(){
+			console.log('clicked');
+                var src = $(this).attr('src');
+                var img = '<img src="' + src + '" class="img-responsive"/>';
+                
+                //start of new code new code
+                var index = $(this).parent('li').index();   
+                
+                var html = '';
+                html += img;                
+                html += '<div style="height:25px;clear:both;display:block;">';
+                html += '<a class="controls next" style="color:white;" href="'+ (index+2) + '"><button type="button" class="btn btn-primary controls next">next</button></a>';
+			    html += '<a class="controls previous" style="color:white;" href="'+ (index+2) + '"><button type="button" class="btn btn-primary controls prev">prev</button></a>';
+                html += '</div>';
+                
+                $('#myModal').modal();
+                $('#myModal').on('shown.bs.modal', function(){
+                    $('#myModal .modal-body').html(html);
+                    //new code
+                    $('a.controls').trigger('click');
+                })
+                $('#myModal').on('hidden.bs.modal', function(){
+                    $('#myModal .modal-body').html('');
+                });
+           });
+}
+xhr.send();
+//	$("#gallery").append('<li class="col-lg-2 col-md-2 col-sm-3 col-xs-4"><img class="img-responsive" src="http://demo.fearlessflyer.com/html/demo/bootstrap-photo-gallery/images/photodune-682990-online-search-xs.jpg"></li>');
+		
+        
+        })
+        
+        //new code
+        $(document).on('click', 'a.controls', function(){
+            var index = $(this).attr('href');
+            var src = $('ul.row li:nth-child('+ index +') img').attr('src');             
+            
+            $('.modal-body img').attr('src', src);
+            
+            var newPrevIndex = parseInt(index) - 1; 
+            var newNextIndex = parseInt(newPrevIndex) + 2; 
+            
+            if($(this).hasClass('previous')){               
+                $(this).attr('href', newPrevIndex); 
+                $('a.next').attr('href', newNextIndex);
+            }else{
+                $(this).attr('href', newNextIndex); 
+                $('a.previous').attr('href', newPrevIndex);
+            }
+            
+            var total = $('ul.row li').length + 1; 
+            //hide next button
+            if(total === newNextIndex){
+                $('a.next').hide();
+            }else{
+                $('a.next').show()
+            }            
+            //hide previous button
+            if(newPrevIndex === 0){
+                $('a.previous').hide();
+            }else{
+                $('a.previous').show()
+            }
+            
+            
+            return false;
+        });
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+         
+         
+        
+    </script>
+
+</body></html>

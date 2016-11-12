@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <script src="jquery.min.js"></script>
+    <script src="bootstrap/dist/js/bootstrap.min.js"></script>
+	<style>
+  head {background-color:lightgray}
+  h1   {color:blue}
+  p    {color:green}
+</style>
+    <style>
+		span.stars, span.stars span {
+    display: block;
+    background: url(stars.png) 0 -16px repeat-x;
+    width: 80px;
+    height: 16px;
+}
+
+span.stars span {
+    background-position: 0 0;
+}
+	</style>
+    <link rel="stylesheet" type="text/css" href="bootstrap/dist/css/bootstrap.min.css" />
+    <title></title>
+	<script>
+	
+	function addRow(text) {
+    var div = document.createElement('div');
+    div.className = 'row well click';
+    div.innerHTML = text;
+     document.body.appendChild(div);
+}
+function getMeta(url){
+  $("<img/>").attr("src", url).load(function(){
+     s = {w:this.width, h:this.height};
+     //alert(s.w+' '+s.h);      
+  });
+$("<img/>").attr("src", url).error(function(){
+     s = {w:this.width, h:this.height};
+   //  alert(s.w+' '+s.h);      
+  });  
+}
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+function distanceBetweenCoordinatesInMiles2(lat1,lon1,lat2,lon2) {//these are doubles
+
+    var R = 6371; // km
+    var x1 = lat2 - lat1;
+    var dLat = x1 * Math.PI / 180;
+    var x2 = lon2 - lon1;
+    var dLon = x2 * Math.PI / 180;
+
+    var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+        Math.cos(lat1*Math.PI/180) * Math.cos(lat2*Math.PI/180) *
+        Math.sin(dLon/2) * Math.sin(dLon/2);
+
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    var d = R * c;
+    return d;///following is to add functionality of converting to miles with some kinda toggle button
+	return d / 1.60934;
+}
+
+
+//  var obj = localStorage.getItem('GetData');
+	var xhr = new XMLHttpRequest();
+	//var obj='restaurant';
+	//var q = localStorage.getItem("filter");
+	//navigator.geolocation.getCurrentPosition(function (position) {                                                              //This gets the
+		//		 var latitude = position.coords.latitude;     
+							 //users current
+		//		 var longitude = position.coords.longitude;       
+//alert(latitude);				 //location
+				// var coords = new google.maps.LatLng(latitude, longitude); 
+				// var location= new google.maps.LatLng(latitude, longitude);
+				//alert(location);
+xhr.open('GET', 'http://allow-any-origin.appspot.com/https://maps.googleapis.com/maps/api/place/search/json?types='+getParameterByName('type')+'&rankby=distance&location='+getParameterByName('latt')+','+getParameterByName('longi')+'&hasNextPage=true&nextPage()=true&key='+getParameterByName('key'));
+xhr.onload = function(e) {
+  var data = JSON.parse(this.response);
+  var results = data.results;
+  for(var i=0;i<results.length;i++){
+var htmlcontent = '<a href="page2.html?key='+getParameterByName('key')+'&place_id='+results[i].place_id+'&place_latitude='+results[i].geometry.location.lat+'&place_longitude='+results[i].geometry.location.lng+'&latt='+getParameterByName('latt')+'&longi='+getParameterByName('longi')+'"></a><div class="col-sm-8 col-md-8 col-xs-8 well" style="background-color:#eff4ff"><a href="page2.html?key='+getParameterByName('key')+'&place_id='+results[i].place_id+'&place_latitude='+results[i].geometry.location.lat+'&place_longitude='+results[i].geometry.location.lng+'&latt='+getParameterByName('latt')+'&longi='+getParameterByName('longi')+'"><address><strong>'+results[i].name+'</strong><br />'+results[i].vicinity+'</address>';
+	
+	if(results[i].rating!=null){
+	//htmlcontent+='<a href="http://plus.google.com/100165111113711099157/about?hl=en-US">visit website</a>';
+	htmlcontent+='<div class="outer-outer" style="width:80px;height:24px"><div class="outer col-sm-6" style="background: url(stars.png) 0 -16px repeat-x;height:16px;padding:0px;"><div id="inner" style="float:left;background: url(stars.png);width:'+parseFloat(results[i].rating)*16.0+'px;height:16px"></div></div><div class="col-sm-6"><strong>'+results[i].rating+'/5</strong></div></div>';
+	}htmlcontent+='</a></div>';
+	htmlcontent+='<div class="col-sm-4 col-md-4 col-xs-4"><center>';
+//	htmlcontent+='<div class="well"><a href="page3.html?url='+results[i].url+'">write a review...</a><br>';
+	if(results[i].photos!=null)
+	{htmlcontent+='<a href="page2.html?key='+getParameterByName('key')+'&place_id='+results[i].place_id+'&place_latitude='+results[i].geometry.location.lat+'&place_longitude='+results[i].geometry.location.lng+'&latt='+getParameterByName('latt')+'&longi='+getParameterByName('longi')+'"><img src="https://maps.googleapis.com/maps/api/place/photo?maxwidth='+results[i].photos[0].width+'&photoreference='+results[i].photos[0].photo_reference+'&key=AIzaSyDX2ApQ9IxDuUhYP1moZNBDHCXqBAx5zQI" style="width: 100px; height: 100px;" class="img-rounded" /></a></center></div>';getMeta('https://maps.googleapis.com/maps/api/place/photo?maxwidth='+results[i].photos[0].width+'&photoreference='+results[i].photos[0].photo_reference+'&key=AIzaSyDX2ApQ9IxDuUhYP1moZNBDHCXqBAx5zQI');}
+	else
+	htmlcontent+='<a href="page2.html?key='+getParameterByName('key')+'&place_id='+results[i].place_id+'&place_latitude='+results[i].geometry.location.lat+'&place_longitude='+results[i].geometry.location.lng+'&latt='+getParameterByName('latt')+'&longi='+getParameterByName('longi')+'"><img src="'+results[i].icon+'" style="width: 100px; height: 100px;" class="img-rounded" /></a></center></div>';
+	
+	//	alert(results[i].url);
+	//htmlcontent+='<div class="well"><a href="page3.html?url='+results[i].url+'">write a review...</a><br>';
+
+	$(".col-sm-8 col-md-8 col-xs-8 well").click(function() {
+  window.location = $(this).find("a").attr("href"); 
+  return false;
+});
+	addRow(htmlcontent);
+  }
+
+  }
+  	
+xhr.send();
+
+//});
+		</script>
+  </head>
+  <body>
+  <script>
+  $(".click").click(function() {
+  window.location = $(this).find("a").attr("href"); 
+  return false;
+});
+  </script>
+</body>
+</html>

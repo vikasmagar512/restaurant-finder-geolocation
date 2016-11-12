@@ -1,0 +1,35 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="style.css" />
+		<link href='http://fonts.googleapis.com/css?family=Lobster' rel='stylesheet'  type='text/css'>
+	<style>
+		body {
+    font-family: 'Lobster', sans-serif;
+}
+	</style>
+		<script src="jquery.min.js"></script>
+		<script type="text/javascript" src="tweenmax.min.js"></script>
+		<script type="text/javascript" src="main.js"></script>		
+	</head>
+
+	<body>
+		<center><div id="textDiv">
+			Resto-Fiesta....	
+		</div></center>
+		<script>
+	setTimeout(
+	  function(){
+	  	if (navigator.geolocation) {
+	        navigator.geolocation.getCurrentPosition(showPosition);
+	    } else {
+	        x.innerHTML = "Geolocation is not supported by this browser.";
+	    }
+	    function showPosition(position) {
+			var latt=position.coords.latitude;
+			var longi=position.coords.longitude;
+			window.location = 'page0.html?key=AIzaSyDX2ApQ9IxDuUhYP1moZNBDHCXqBAx5zQI&latt='+latt+'&longi='+longi;
+		}
+	}, 500);
+		</script>
+	</body>
+</html>

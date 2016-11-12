@@ -1,0 +1,43 @@
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <script src="jquery.min.js"></script>
+    <script src="bootstrap/dist/js/bootstrap.min.js"></script>
+	 <link href='http://fonts.googleapis.com/css?family=Lobster' rel='stylesheet'  type='text/css'>
+	<link rel="stylesheet" type="text/css" href="bootstrap/dist/css/bootstrap.min.css" />
+	<style>
+		body {
+		    font-family: 'Lobster', sans-serif;
+		}
+	</style>
+	</head>
+	<body>
+		<script>
+		var latt,longi;
+		function getParameterByName(name) {
+		    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+		    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+		        results = regex.exec(location.search);
+		    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+		}
+		var arr=['cafe','restaurant','bar','bakery','meal_delivery'];
+		var div='';
+		arr.map(function(type,i){
+			if(i==3){
+				var img='generic_business';
+			}else if(i==4){
+				var img='restaurant';
+			}else{
+				var img=type;
+			}
+			div+='<div class="row" style="cursor:pointer;background-color:#eff4ff;margin-bottom:10px;margin-top:10px;"> <div class="col-sm-8 col-md-8 col-xs-8"><center><strong><h1>'+type+'</h1></strong></center></div><div class="col-sm-4 col-md-4 col-xs-4"><img src="http://maps.gstatic.com/mapfiles/place_api/icons/'+img+'-71.png" style="width:100px;height:100px;"/></div><a href="page1.html?key='+getParameterByName('key')+'&latt='+getParameterByName('latt')+'&longi='+getParameterByName('longi')+'&type='+type+'"></a></div>';
+		});
+		
+		$('body').append(div);		
+		$(".row").click(function() {
+		  window.location = $(this).find("a").attr("href"); 
+		  return false;
+		});
+		</script>
+	</body>
+</html>

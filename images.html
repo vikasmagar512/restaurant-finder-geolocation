@@ -116,7 +116,7 @@
 var obj=getParameterByName('place_id');
 
 //alert('from images'+obj);
-xhr.open('GET', 'http://allow-any-origin.appspot.com/https://maps.googleapis.com/maps/api/place/details/json?placeid='+obj+'&key=AIzaSyDX2ApQ9IxDuUhYP1moZNBDHCXqBAx5zQI');
+xhr.open('GET', 'https://allow-any-origin.appspot.com/https://maps.googleapis.com/maps/api/place/details/json?placeid='+obj+'&key=AIzaSyDX2ApQ9IxDuUhYP1moZNBDHCXqBAx5zQI');
 xhr.onload = function(e) {
 	data = JSON.parse(this.response);
     result = data.result;
